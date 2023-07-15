@@ -4,14 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
     "url": "Collage Project"
   },
-  "author": "",
+  "author": "theAryanGroup",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
