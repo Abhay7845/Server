@@ -30,6 +30,7 @@ router.post("/register", registerValidation, async (req, res) => {
     }
     const salt = await bcrypt.genSalt(10);
     const SecPassword = bcrypt.hashSync(req.body.password, salt);
+    const token = jwt.sign(data, JWT_SECRET);
     // create users
     user = await User.create({
       name: req.body.name,
@@ -40,7 +41,6 @@ router.post("/register", registerValidation, async (req, res) => {
     const data = {
       user: user,
     };
-    const token = jwt.sign(data, JWT_SECRET);
     res.send({
       success: true,
       message: "user registered successfully",
