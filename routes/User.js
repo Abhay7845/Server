@@ -1,3 +1,5 @@
+/** @format */
+
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
@@ -14,6 +16,7 @@ var fetchUser = require("../middleware/FetchUser");
 
 const JWT_SECRET = "AryanIsGoodBoy";
 
+const loginTime = Date();
 // REGISTER ROUTER :-1
 router.post("/register", registerValidation, async (req, res) => {
   const errors = validationResult(req);
@@ -46,6 +49,7 @@ router.post("/register", registerValidation, async (req, res) => {
       message: "user registered successfully",
       user,
       token,
+      loginTime,
     });
   } catch (error) {
     console.log("error==>", error);
@@ -77,7 +81,13 @@ router.post("/login", loginValidation, async (req, res) => {
       user: user,
     };
     const token = jwt.sign(data, JWT_SECRET);
-    res.json({ success: true, message: "login successfully", user, token });
+    res.json({
+      success: true,
+      message: "login successfully",
+      user,
+      token,
+      loginTime,
+    });
   } catch (error) {
     console.log("error==>", error);
     res.status(500).send("user doesn't login");
