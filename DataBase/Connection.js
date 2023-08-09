@@ -1,5 +1,3 @@
-/** @format */
-
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const ENV = require("../.env");
