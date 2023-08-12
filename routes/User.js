@@ -244,7 +244,7 @@ router.delete("/delete/user/:id", async (req, res) => {
   }
 });
 
-// DELETE ADD USERS API -7
+// UPDATE ADD USERS API -8
 router.put("/update/user/:id", async (req, res) => {
   try {
     const updateUser = await AddUser.findById(req.params.id);
@@ -275,3 +275,5 @@ router.put("/update/user/:id", async (req, res) => {
 });
 
 module.exports = router;
+
+// FORGOT USER PASSWORD API -9
