@@ -274,8 +274,6 @@ router.put("/update/user/:id", async (req, res) => {
   }
 });
 
-module.exports = router;
-
 // FORGOT USER PASSWORD API -9
 router.put("/forgot/password", async (req, res) => {
   const { email, conPassword } = await req.body;
@@ -300,3 +298,5 @@ router.put("/forgot/password", async (req, res) => {
     console.log("error==>", error);
   }
 });
+
+module.exports = router;
