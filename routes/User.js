@@ -281,15 +281,17 @@ router.put("/forgot/password", async (req, res) => {
   const { email, conPassword } = await req.body;
   try {
     let user = await User.findOne({ email });
-    console.log("user==>", user);
     if (!user) {
       return res.status(404).json({ success: false, error: "Invalid Email" });
     }
-    // const salt = await bcrypt.genSalt(10);
-    // const SecPassword = bcrypt.hashSync(conPassword, salt);
-    await User.updateOne({
-      password: conPassword,
-    });
+    const salt = await bcrypt.genSalt(10);
+    const SecPassword = bcrypt.hashSync(conPassword, salt);
+    await User.updateOne(
+      { email },
+      {
+        password: SecPassword,
+      }
+    );
     res.json({
       success: true,
       message: "password Reset successfully",
