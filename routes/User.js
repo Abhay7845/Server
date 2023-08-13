@@ -281,7 +281,7 @@ module.exports = router;
 router.put("/forgot/password", forgotValidation, async (req, res) => {
   try {
     let user = await User.findOne({ email: req.body.email });
-    const { email } = user;
+    const email = !user ? "" : user.email;
     const checkMail = await req.body.email;
     const salt = await bcrypt.genSalt(10);
     const SecPassword = bcrypt.hashSync(req.body.conPassword, salt);
@@ -293,10 +293,10 @@ router.put("/forgot/password", forgotValidation, async (req, res) => {
         success: true,
         message: "password changed successfully",
       });
-    } else {
-      res.status(500).send({ success: false, message: "invalid email" });
+    } else if (!email) {
+      res.status(404).send({ success: false, message: "invalid email" });
     }
   } catch (error) {
-    res.status(500).send({ success: false, message: error });
+    console.log("error==>", error);
   }
 });
