@@ -293,8 +293,8 @@ router.put("/forgot/password", forgotValidation, async (req, res) => {
         success: true,
         message: "password changed successfully",
       });
-    } else if (email != checkMail) {
-      return res.status(404).send({ success: false, message: "invalid email" });
+    } else {
+      res.status(500).send({ success: false, message: "invalid email" });
     }
   } catch (error) {
     res.status(500).send({ success: false, message: error });
