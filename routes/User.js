@@ -13,6 +13,7 @@ const SubscriptionValidation = require("../validation/Subscription");
 const { validationResult } = require("express-validator");
 var jwt = require("jsonwebtoken");
 var fetchUser = require("../middleware/FetchUser");
+const forgotValidation = require("../validation/ForgotPassword");
 
 const JWT_SECRET = "AryanIsGoodBoy";
 
@@ -277,3 +278,25 @@ router.put("/update/user/:id", async (req, res) => {
 module.exports = router;
 
 // FORGOT USER PASSWORD API -9
+router.put("/forgot/password", forgotValidation, async (req, res) => {
+  try {
+    let user = await User.findOne({ email: req.body.email });
+    const { email } = user;
+    const checkMail = await req.body.email;
+    const salt = await bcrypt.genSalt(10);
+    const SecPassword = bcrypt.hashSync(req.body.conPassword, salt);
+    if (email === checkMail) {
+      user = await User.updateOne({
+        password: SecPassword,
+      });
+      res.status(200).send({
+        success: true,
+        message: "password changed successfully",
+      });
+    } else if (email != checkMail) {
+      return res.status(404).send({ success: false, message: "invalid email" });
+    }
+  } catch (error) {
+    res.status(500).send({ success: false, message: error });
+  }
+});

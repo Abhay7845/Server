@@ -19,4 +19,4 @@ const forgotSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("forgat", forgotSchema);
+module.exports = mongoose.model("forgot", forgotSchema);
