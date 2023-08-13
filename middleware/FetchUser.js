@@ -3,6 +3,7 @@ const JWT_SECRET = "AryanIsGoodBoy";
 
 const fetchUser = (req, res, next) => {
   const token = req.header("Authorization");
+  console.log("token==>", token);
   if (!token) {
     res.status(401).send({ error: "invalid token" });
   }

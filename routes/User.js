@@ -278,23 +278,22 @@ module.exports = router;
 
 // FORGOT USER PASSWORD API -9
 router.put("/forgot/password", async (req, res) => {
+  const { email, conPassword } = await req.body;
   try {
-    let user = await User.findOne({ email: req.body.email });
-    const email = !user ? "" : user.email;
-    const checkMail = await req.body.email;
-    const salt = await bcrypt.genSalt(10);
-    const SecPassword = bcrypt.hashSync(req.body.conPassword, salt);
-    if (email === checkMail) {
-      user = await User.updateOne({
-        password: SecPassword,
-      });
-      res.status(200).send({
-        success: true,
-        message: "password changed successfully",
-      });
-    } else if (!email) {
-      res.status(404).send({ success: false, message: "invalid email" });
+    let user = await User.findOne({ email });
+    console.log("user==>", user);
+    if (!user) {
+      return res.status(404).json({ success: false, error: "Invalid Email" });
     }
+    // const salt = await bcrypt.genSalt(10);
+    // const SecPassword = bcrypt.hashSync(conPassword, salt);
+    await User.updateOne({
+      password: conPassword,
+    });
+    res.json({
+      success: true,
+      message: "password Reset successfully",
+    });
   } catch (error) {
     console.log("error==>", error);
   }
