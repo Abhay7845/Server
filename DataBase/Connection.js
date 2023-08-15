@@ -3,10 +3,10 @@ const dotenv = require("dotenv");
 const ENV = require("../.env");
 mongoose.set("strictQuery", false);
 
-// const DataBaseConnectionURI = "mongodb://127.0.0.1:27017/StudentsData";
+const DataBaseConnectionURI = "mongodb://127.0.0.1:27017/StudentsData";
 
 dotenv.config(ENV);
-const DataBaseConnectionURI = process.env.DATABASE_URL;
+// const DataBaseConnectionURI = process.env.DATABASE_URL;
 
 const DatabaseConnection = () => {
   mongoose

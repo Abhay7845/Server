@@ -161,11 +161,11 @@ router.get("/fetchAddUser", fetchUser, async (req, res) => {
         addUserData,
       });
     } else {
-      res.status(400).json({ success: false, error: "add users Not Found" });
+      res.status(404).json({ success: false, error: "added users not found" });
     }
   } catch (error) {
     console.log("error==>", error);
-    res.status(400).send({ success: false, message: "user not found" });
+    res.status(400).send({ success: false, message: error });
   }
 });
 
@@ -233,14 +233,15 @@ router.delete("/delete/user/:id", async (req, res) => {
       return res
         .status(400)
         .send({ success: false, message: "data not found" });
+    } else {
+      res.status(200).send({
+        success: true,
+        message: "data has been deleted successfully",
+        data: deleteId,
+      });
     }
-    res.status(200).send({
-      success: true,
-      message: "data has been deleted successfully",
-      data: deleteId,
-    });
   } catch (error) {
-    res.status(500).send({ success: false, message: error });
+    console.log("error==>", error);
   }
 });
 
