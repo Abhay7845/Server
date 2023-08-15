@@ -14,7 +14,7 @@ const DatabaseConnection = () => {
       useNewUrlParser: true,
       useUniFiedTopology: true,
     })
-    .then(() => console.log("Connection Successfully"))
+    .then(() => console.log("DB Connection Successfully"))
     .catch((error) => console.log("error==>", error));
 };
 
