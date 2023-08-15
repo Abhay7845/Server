@@ -11,7 +11,7 @@ dotenv.config(ENV);
 const PORT = process.env.PORT || 5000;
 
 // Available Routes
-app.use("/api/user", require("./routes/User"));
+app.use("/api/user", require("./src/routes/User"));
 app.listen(PORT, () => {
   console.log(`Server is Running on PORT ${PORT}`);
 });
