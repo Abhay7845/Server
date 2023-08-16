@@ -4,7 +4,7 @@ const JWT_SECRET = "AryanIsGoodBoy";
 const fetchUser = (req, res, next) => {
   const token = req.header("Authorization");
   if (!token) {
-    res.status(401).send({ error: "invalid token" });
+    res.status(404).send({ error: "invalid token" });
   }
   try {
     const data = jwt.verify(token, JWT_SECRET);
@@ -12,7 +12,7 @@ const fetchUser = (req, res, next) => {
     next();
   } catch (error) {
     // console.log("error==>", error);
-    res.status(401).send({ error: "user not found" });
+    return res.status(401).send({ error: "user not found" });
   }
 };
 
