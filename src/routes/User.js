@@ -252,7 +252,7 @@ router.put("/update/user/:id", async (req, res) => {
         .status(400)
         .send({ success: false, message: "user Not found" });
     } else {
-      await AddUser.updateOne({
+      await AddUser.findByIdAndUpdate(updateUser._id, {
         name: req.body.name,
         occupation: req.body.occupation,
         email: req.body.email,
