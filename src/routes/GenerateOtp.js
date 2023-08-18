@@ -9,13 +9,13 @@ const client = new twilio(accountSid, authToken);
 
 router.post("/send-otp", async (req, res) => {
   const { phoneNumber } = await req.body;
+  const otp = Math.floor(100000 + Math.random() * 900000);
   if (!phoneNumber) {
     return res
       .status(404)
       .send({ success: false, message: "phone number is required" });
   }
   try {
-    const otp = Math.floor(100000 + Math.random() * 900000);
     client.messages
       .create({
         body: `Your OTP is: ${otp}`,
