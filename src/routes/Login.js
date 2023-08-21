@@ -43,7 +43,7 @@ router.post("/login", loginValidation, async (req, res) => {
     });
   } catch (error) {
     console.log("error==>", error);
-    res.status(500).send("user doesn't login");
+    return res.status(500).send("user doesn't login");
   }
 });
 
@@ -59,6 +59,7 @@ passport.use(
     (accessToken, refreshToken, profile, done) => {
       console.log("accessToken==>", accessToken);
       console.log("refreshToken==>", refreshToken);
+      console.log("profile==>", profile);
       return done(null, profile);
     }
   )
@@ -82,8 +83,8 @@ router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    // Successful authentication, redirect or respond with user data
-    res.json(req.user);
+    console.log("res==>", res);
+    res.status(200).send({ success: true, massage: req.user });
   }
 );
 
