@@ -6,11 +6,11 @@ const nodemailer = require("nodemailer");
 
 const accountSid = "AC87c4448d2dacc9bce7b75f78e9606b66";
 const authToken = "5fc3fb4937bb24a05ea691183c41797f";
-const twilioPhone = +19519042773;
-const client = new twilio(accountSid, authToken);
+const twilioPhone = "+19519042773";
+const client = twilio(accountSid, authToken);
 
 const emailConfig = {
-  service: "your_email_service_provider", // e.g., 'Gmail'
+  service: "your_email_service_provider",
   auth: {
     user: "your_email@example.com",
     pass: "your_email_password",
@@ -21,6 +21,7 @@ const transporter = nodemailer.createTransport(emailConfig);
 
 router.post("/send-otp/by/phone", async (req, res) => {
   const { phoneNumber } = await req.body;
+  console.log("phoneNumber==>", phoneNumber);
   const otp = Math.floor(100000 + Math.random() * 900000);
   if (!phoneNumber) {
     return res
@@ -39,7 +40,7 @@ router.post("/send-otp/by/phone", async (req, res) => {
         res.json({ message: "OTP sent successfully." });
       })
       .catch((error) => {
-        console.error(error);
+        console.log("error1==>", error);
         res.status(500).json({ error: "Failed to send OTP" });
       });
   } catch (error) {
