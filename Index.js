@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 5000;
 app.use("/api/user", require("./src/routes/User"));
 app.use("/api/user", require("./src/routes/Login"));
 app.use("/api/user", require("./src/routes/GenerateOtp"));
+app.use("/api/user", require("./src/routes/ContactUs"));
 
 app.listen(PORT, () => {
   console.log(`Server is Running on PORT ${PORT}`);

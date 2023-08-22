@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
 
-const Subscription = new mongoose.Schema({
-  email: {
+const ContactUs = new mongoose.Schema({
+  yourName: {
     type: String,
     require: true,
   },
-  comment: {
+  phone: {
+    type: Number,
+    require: true,
+  },
+  massage: {
     type: String,
     require: true,
   },
@@ -15,4 +19,4 @@ const Subscription = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("comment", Subscription);
+module.exports = mongoose.model("ContactUs", ContactUs);

@@ -4,10 +4,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../model/Users");
 const AddUser = require("../model/AddUser");
 const addUserValidation = require("../validation/addUser");
-const subscription = require("../model/Subscription");
 const registerValidation = require("../validation/Register");
-const loginValidation = require("../validation/Login");
-const SubscriptionValidation = require("../validation/Subscription");
 const { validationResult } = require("express-validator");
 var jwt = require("jsonwebtoken");
 var fetchUser = require("../middleware/FetchUser");
@@ -148,41 +145,6 @@ router.get("/fetch/AddUser/:id", async (req, res) => {
   } catch (error) {
     console.log("error==>", error);
     res.status(400).send({ success: false, message: "user not found" });
-  }
-});
-
-// SUBSCRIPTION API -5
-router.post("/subscription", SubscriptionValidation, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).send({ success: false, errors: errors.array() });
-  }
-  try {
-    const { email, comment } = await req.body;
-    const subscriber = await subscription.create({ email, comment });
-    res.status(200).send({
-      success: true,
-      message: "user Subscribed successfully",
-      subscriber,
-    });
-  } catch (error) {
-    console.log("error==>", error);
-    res.status(400).send({ success: false, message: "Not Subscribed" });
-  }
-});
-
-// FETCH SUBSCRIPTION COMMENT API -6
-router.get("/fetch/comment", async (req, res) => {
-  try {
-    let comments = await subscription.find({ user: req.body.id });
-    res.status(200).send({
-      success: true,
-      message: "comments fetched successfully",
-      comments,
-    });
-  } catch (error) {
-    console.log("error==>", error);
-    res.status(400).send({ success: false, message: "subscription not found" });
   }
 });
 
