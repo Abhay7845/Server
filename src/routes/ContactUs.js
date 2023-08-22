@@ -48,11 +48,11 @@ router.post("/contact/with/us", userContactsValidation, async (req, res) => {
     return res.status(400).send({ success: false, errors: errors.array() });
   }
   try {
-    const { yourName, phone, massage } = await req.body;
+    const { yourName, phone, message } = await req.body;
     const contactUsers = await ContatctUs.create({
       yourName: yourName,
       phone: phone,
-      massage: massage,
+      message: message,
     });
     res.status(200).send({
       success: true,

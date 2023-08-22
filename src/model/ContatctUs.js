@@ -9,7 +9,7 @@ const ContactUs = new mongoose.Schema({
     type: Number,
     require: true,
   },
-  massage: {
+  message: {
     type: String,
     require: true,
   },
