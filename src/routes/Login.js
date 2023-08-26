@@ -5,8 +5,6 @@ const User = require("../model/Users");
 const loginValidation = require("../validation/Login");
 const { validationResult } = require("express-validator");
 var jwt = require("jsonwebtoken");
-const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const JWT_SECRET = "AryanIsGoodBoy";
 
 const loginTime = Date();
@@ -48,40 +46,6 @@ router.post("/login", loginValidation, async (req, res) => {
 });
 
 // LOGIN WITH GOOGLE API
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID:
-        "632374650147-qgk47m10ks6td9r45j3q6fgnat8ncc6s.apps.googleusercontent.com",
-      clientSecret: "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",
-      callbackURL: "http://localhost:3000/auth/google/callback",
-      scope: ["profile", "email"],
-    },
-    (accessToken, refreshToken, profile, callback) => {
-      callback(null, profile);
-    }
-  )
-);
-// Serialize user into the session
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
-
-router.get(
-  "/auth/google",
-  passport.authenticate("google", {
-    successRedirect: "http://localhost:3000/auth/google/callback",
-    failureRedirect: "/",
-  })
-);
-
-router.get("/google", passport.authenticate("google", ["profile", "email"]));
-
-// Create callback route
 
 router.get("/login/success/:email", async (req, res) => {
   const email = req.params.email;
