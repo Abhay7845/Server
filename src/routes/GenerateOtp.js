@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const twilio = require("twilio");
-const User = require("../model/Users");
 const nodemailer = require("nodemailer");
 
 const accountSid = "AC87c4448d2dacc9bce7b75f78e9606b66";
@@ -19,6 +18,7 @@ const emailConfig = {
 
 const transporter = nodemailer.createTransport(emailConfig);
 
+// SEND OTP BY PHONE NUMBER
 router.post("/send-otp/by/phone", async (req, res) => {
   const { phoneNumber } = await req.body;
   console.log("phoneNumber==>", phoneNumber);
@@ -48,37 +48,37 @@ router.post("/send-otp/by/phone", async (req, res) => {
   }
 });
 
+// SEND OTP BY EMAIL
 router.post("/send-otp/by/email", async (req, res) => {
-  const { email } = await req.body;
-  const otp = Math.floor(100000 + Math.random() * 900000);
+  const email = await req.body.email;
   if (!email) {
-    return res.status(400).json({ message: "email is required" });
+    return res
+      .status(404)
+      .send({ success: false, message: "email is required" });
   }
   try {
-    let user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).send({ success: false, message: "invalid email" });
-    } else {
-      const mailOptions = {
-        from: "your_email@example.com",
-        to: email,
-        subject: "Your OTP Code",
-        text: `Your OTP code is: ${otp}`,
-      };
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error("Error sending email==>", error);
-          return res.status(500).json({ message: "Failed to send OTP email" });
-        } else {
-          console.log("Email sent==>", info.response);
-          res.json({
-            success: true,
-            message: "OTP has been sent successfully",
-            otp: otp,
-          });
-        }
-      });
-    }
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    let TestMailer = await nodemailer.createTestAccount();
+    const transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      auth: {
+        user: "lesly2@ethereal.email",
+        pass: "tUjs7HnUCatQQtjb3H",
+      },
+    });
+    const info = await transporter.sendMail({
+      from: "THE ARYAN GROUP <thearyangrouppvt@gmail.com>",
+      to: email,
+      subject: "Verify Your Email OTP",
+      text: `Dear user, Congratulations Please verify your OTP, YOUR OTP is : ${otp}`,
+    });
+    console.log("Message sent==>", info.messageId);
+    res.status(200).send({
+      success: true,
+      massage: "OTP has been sent successfly",
+      otp: otp,
+    });
   } catch (error) {
     console.log("error==>", error);
   }
