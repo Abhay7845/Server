@@ -2,21 +2,19 @@ const express = require("express");
 const router = express.Router();
 const twilio = require("twilio");
 const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
 
 const accountSid = "AC87c4448d2dacc9bce7b75f78e9606b66";
 const authToken = "5fc3fb4937bb24a05ea691183c41797f";
 const twilioPhone = "+19519042773";
 const client = twilio(accountSid, authToken);
 
-const emailConfig = {
-  service: "your_email_service_provider",
-  auth: {
-    user: "your_email@example.com",
-    pass: "your_email_password",
-  },
-};
-
-const transporter = nodemailer.createTransport(emailConfig);
+const client_id =
+  "517975281730-voasvrddq9f7bpd9pk025kqc7nfbdeq2.apps.googleusercontent.com";
+const client_secret = "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";
+const redirect_url = "https://developers.google.com/oauthplayground";
+const refress_token =
+  "1//04eE8bdlMcnXBCgYIARAAGAQSNwF-L9Irp81PJHibaan2RxZolxd3JmenOM7SQiOxrCYKCJ3nhQlQ41YZo0xbzhzMATctv6CxqJA";
 
 // SEND OTP BY PHONE NUMBER
 router.post("/send-otp/by/phone", async (req, res) => {
@@ -49,36 +47,49 @@ router.post("/send-otp/by/phone", async (req, res) => {
 });
 
 // SEND OTP BY EMAIL
+
+const oAuth2Client = new google.auth.OAuth2(
+  client_id,
+  client_secret,
+  redirect_url
+);
+oAuth2Client.setCredentials({ refresh_token: refress_token });
+
 router.post("/send-otp/by/email", async (req, res) => {
   const email = await req.body.email;
+  const otp = Math.floor(100000 + Math.random() * 900000);
   if (!email) {
     return res
       .status(404)
       .send({ success: false, message: "email is required" });
   }
   try {
-    const otp = Math.floor(100000 + Math.random() * 900000);
-    let TestMailer = await nodemailer.createTestAccount();
+    const accessToken = await oAuth2Client.getAccessToken();
     const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
+      service: "gmail",
       auth: {
-        user: "lesly2@ethereal.email",
-        pass: "tUjs7HnUCatQQtjb3H",
+        type: "OAuth2",
+        user: "iteanzabhaykumar@titan.co.in",
+        clientId: client_id,
+        clientSecret: client_secret,
+        refreshToken: refress_token,
+        accessToken: accessToken,
       },
     });
-    const info = await transporter.sendMail({
-      from: "THE ARYAN GROUP <thearyangrouppvt@gmail.com>",
+    const sendMailOptions = {
+      from: "The Aryan Group Pvt. Ltd <iteanzabhaykumar@titan.co.in>",
       to: email,
       subject: "Verify Your Email OTP",
-      text: `Dear user, Congratulations Please verify your OTP, YOUR OTP is : ${otp}`,
-    });
-    console.log("Message sent==>", info.messageId);
-    res.status(200).send({
-      success: true,
-      massage: "OTP has been sent successfly",
-      otp: otp,
-    });
+      text: `Dear User, Congratulations Please verify your OTP is : ${otp}`,
+    };
+    const result = await transporter.sendMail(sendMailOptions);
+    if (result) {
+      res.status(200).send({
+        success: true,
+        massage: "OTP has been sent successfly",
+        otp: otp,
+      });
+    }
   } catch (error) {
     console.log("error==>", error);
   }
