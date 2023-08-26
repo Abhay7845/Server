@@ -55,12 +55,10 @@ passport.use(
         "632374650147-qgk47m10ks6td9r45j3q6fgnat8ncc6s.apps.googleusercontent.com",
       clientSecret: "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",
       callbackURL: "http://localhost:3000/auth/google/callback",
+      scope: ["profile", "email"],
     },
-    (accessToken, refreshToken, profile, done) => {
-      console.log("accessToken==>", accessToken);
-      console.log("refreshToken==>", refreshToken);
-      console.log("profile==>", profile);
-      return done(null, profile);
+    (accessToken, refreshToken, profile, callback) => {
+      callback(null, profile);
     }
   )
 );
@@ -75,17 +73,29 @@ passport.deserializeUser((user, done) => {
 
 router.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", {
+    successRedirect: "http://localhost:3000/auth/google/callback",
+    failureRedirect: "/",
+  })
 );
 
 // Create callback route
-router.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  async (req, res) => {
-    console.log("res==>", await res);
-    res.status(200).send({ success: true, massage: req.user });
+
+router.get("/login/success", async (req, res) => {
+  console.log("use==>", req.user);
+  if (req.user) {
+    res
+      .status(200)
+      .send({ success: true, massage: "user logged in", user: req.user });
+  } else {
+    res.status(403).send({ success: false, massage: "user not authorized" });
   }
-);
+});
+
+router.get("/login/failed", async (req, res) => {
+  console.log("res==>", res);
+  res.status(401).send({ success: false, massage: "login failed" });
+});
+router.get("/google", passport.authenticate("google", ["profile", "email"]));
 
 module.exports = router;
