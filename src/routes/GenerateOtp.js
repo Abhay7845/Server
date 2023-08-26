@@ -46,7 +46,7 @@ router.post("/send-otp/by/phone", async (req, res) => {
   }
 });
 
-// SEND OTP BY EMAIL
+// SEND OTP BY EMAIL API
 
 const oAuth2Client = new google.auth.OAuth2(
   client_id,
