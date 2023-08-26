@@ -151,16 +151,15 @@ router.get("/fetch/AddUser/:id", async (req, res) => {
 // DELETE ADD USERS API -7
 router.delete("/delete/user/:id", async (req, res) => {
   try {
-    const deleteId = await AddUser.findByIdAndDelete(req.params.id);
-    if (!req.params.id) {
+    const userData = await AddUser.findByIdAndDelete(req.params.id);
+    if (!userData) {
       return res
-        .status(400)
+        .status(404)
         .send({ success: false, message: "data not found" });
-    } else {
+    } else if (req.params.id) {
       res.status(200).send({
         success: true,
         message: "data has been deleted successfully",
-        data: deleteId,
       });
     }
   } catch (error) {
