@@ -56,7 +56,7 @@ const oAuth2Client = new google.auth.OAuth2(
 oAuth2Client.setCredentials({ refresh_token: refress_token });
 
 router.post("/send-otp/by/email", async (req, res) => {
-  const email = await req.body.email;
+  const { email } = await req.body;
   const otp = Math.floor(100000 + Math.random() * 900000);
   if (!email) {
     return res
@@ -77,10 +77,11 @@ router.post("/send-otp/by/email", async (req, res) => {
       },
     });
     const sendMailOptions = {
-      from: "The Aryan Group Pvt. Ltd <iteanzabhaykumar@titan.co.in>",
+      from: "The Aryan Group Pvt. Ltd. <iteanzabhaykumar@titan.co.in>",
       to: email,
       subject: "Verify Your Email OTP",
-      text: `Dear User, Congratulations Please verify your OTP is : ${otp}`,
+      text: `Dear User, A sign in attempt requires further verification because we did not recognize your device. To complete the sign in, enter the verification code on the unrecognized device.
+ Your Verification Code - ${otp}`,
     };
     const result = await transporter.sendMail(sendMailOptions);
     if (result) {
