@@ -24,7 +24,7 @@ router.post("/login", loginValidation, async (req, res) => {
         .status(400)
         .json({ success: false, error: "Sorry!  please register with us" });
     }
-    const comparePassword = await bcrypt.compare(password, user.password);
+    const comparePassword = bcrypt.compare(password, user.password);
     if (!comparePassword) {
       return res
         .status(400)
@@ -79,23 +79,27 @@ router.get(
   })
 );
 
+router.get("/google", passport.authenticate("google", ["profile", "email"]));
+
 // Create callback route
 
-router.get("/login/success", async (req, res) => {
-  console.log("use==>", req.user);
-  if (req.user) {
-    res
-      .status(200)
-      .send({ success: true, massage: "user logged in", user: req.user });
-  } else {
+router.get("/login/success/:email", async (req, res) => {
+  const email = req.params.email;
+  const user = await User.findOne({ email });
+  const data = {
+    user: user,
+  };
+  const token = jwt.sign(data, JWT_SECRET);
+  if (user) {
+    res.status(200).send({
+      success: true,
+      massage: "login successfully",
+      user,
+      token: token,
+    });
+  } else if (!user) {
     res.status(403).send({ success: false, massage: "user not authorized" });
   }
 });
-
-router.get("/login/failed", async (req, res) => {
-  console.log("res==>", res);
-  res.status(401).send({ success: false, massage: "login failed" });
-});
-router.get("/google", passport.authenticate("google", ["profile", "email"]));
 
 module.exports = router;
