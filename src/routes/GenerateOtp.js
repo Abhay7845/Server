@@ -19,7 +19,6 @@ router.post("/send-otp/by/phone", async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000);
   const { phoneNumber } = await req.body;
   const newPhoneNo = `+91${phoneNumber}`;
-  console.log("newPhoneNo==>", newPhoneNo);
   if (!phoneNumber) {
     return res
       .status(404)
@@ -31,16 +30,16 @@ router.post("/send-otp/by/phone", async (req, res) => {
       timeout: 600,
     };
     messagebird.verify.create(newPhoneNo, params, (err, success) => {
-      if (err) {
-        console.log("error==>", err);
-        res.status(501).send({ success: false, message: "otp not sent" });
-      }
       if (success) {
         res.status(200).send({
           success: true,
           message: "OTP has been sent successfly",
           opt: otp,
         });
+      }
+      if (err) {
+        console.log("error==>", err);
+        res.status(501).send({ success: false, message: "otp not sent" });
       }
     });
   } catch (error) {
