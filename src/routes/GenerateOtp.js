@@ -48,14 +48,12 @@ router.post("/send-otp/by/phone", async (req, res) => {
 });
 
 // SEND OTP BY EMAIL API
-
 const oAuth2Client = new google.auth.OAuth2(
   client_id,
   client_secret,
   redirect_url
 );
 oAuth2Client.setCredentials({ refresh_token: refress_token });
-
 router.post("/send-otp/by/email", async (req, res) => {
   const { email } = await req.body;
   const otp = Math.floor(100000 + Math.random() * 900000);
