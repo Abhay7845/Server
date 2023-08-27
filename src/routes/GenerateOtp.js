@@ -1,14 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const twilio = require("twilio");
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
+const messagebird = require("messagebird").initClient(
+  "P1E1e8nWVpjNdotEHPCcfgYGX09W6WHgdHkd"
+);
 
-const accountSid = "AC87c4448d2dacc9bce7b75f78e9606b66";
-const authToken = "5fc3fb4937bb24a05ea691183c41797f";
-const twilioPhone = "+19519042773";
-const client = twilio(accountSid, authToken);
-
+// EMAIL REQUIRED DATA
 const client_id =
   "517975281730-voasvrddq9f7bpd9pk025kqc7nfbdeq2.apps.googleusercontent.com";
 const client_secret = "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";
@@ -18,29 +16,33 @@ const refress_token =
 
 // SEND OTP BY PHONE NUMBER
 router.post("/send-otp/by/phone", async (req, res) => {
-  const { phoneNumber } = await req.body;
-  console.log("phoneNumber==>", phoneNumber);
   const otp = Math.floor(100000 + Math.random() * 900000);
+  const { phoneNumber } = await req.body;
+  const newPhoneNo = `+91${phoneNumber}`;
+  console.log("newPhoneNo==>", newPhoneNo);
   if (!phoneNumber) {
     return res
       .status(404)
       .send({ success: false, message: "phone number is required" });
   }
   try {
-    client.messages
-      .create({
-        body: `Your OTP is: ${otp}`,
-        from: twilioPhone,
-        to: phoneNumber,
-      })
-      .then((message) => {
-        console.log(message.sid);
-        res.json({ message: "OTP sent successfully." });
-      })
-      .catch((error) => {
-        console.log("error1==>", error);
-        res.status(500).json({ error: "Failed to send OTP" });
-      });
+    const params = {
+      text: `Dear User, Please Don't Share Your OPT with others, Your OTP is ${otp}`,
+      timeout: 600,
+    };
+    messagebird.verify.create(newPhoneNo, params, (err, success) => {
+      if (err) {
+        console.log("error==>", err);
+        res.status(501).send({ success: false, message: "otp not sent" });
+      }
+      if (success) {
+        res.status(200).send({
+          success: true,
+          message: "OTP has been sent successfly",
+          opt: otp,
+        });
+      }
+    });
   } catch (error) {
     console.log("error=>", error);
   }
