@@ -3,7 +3,7 @@ const router = express.Router();
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const messagebird = require("messagebird").initClient(
-  "P1E1e8nWVpjNdotEHPCcfgYGX09W6WHgdHkd"
+  "zMVhu4ChdHgdNdPMLOXDK6vYw"
 );
 
 // EMAIL REQUIRED DATA
@@ -27,7 +27,7 @@ router.post("/send-otp/by/phone", async (req, res) => {
   }
   try {
     const params = {
-      text: `Dear User, Please Don't Share Your OPT with others, Your OTP is ${otp}`,
+      template: `Dear User, Please Don't Share Your OPT with others, Your OTP is %token`,
       timeout: 600,
     };
     messagebird.verify.create(newPhoneNo, params, (err, success) => {
