@@ -91,7 +91,7 @@ router.post("/send-otp/by/email", async (req, res) => {
     const emailHtml = `
   <html>
     <body>
-      <p>Dear<span style="color: blue; font-weight: bold;"> ${userName}</span>, <br/> <br/> Your One-Time Password (OTP) is: <span style="color: blue; font-weight: bold;">${otp}</span> From The Aryan Group Pvt. Ltd. for Website Verification, Verify your OTP and Get access.</p>
+      <p>Dear<b style="color: blue;"> ${userName}</b>, <br/> <br/> Your One-Time Password (OTP) is: <b style="color: blue;">${otp}</b> From The Aryan Group Pvt. Ltd. for Website Verification, Verify your OTP and Get access.</p>
     </body>
   </html>
 `;
