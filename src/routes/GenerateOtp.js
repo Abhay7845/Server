@@ -79,14 +79,13 @@ router.post("/send-otp/by/email", async (req, res) => {
       from: "The Aryan Group Pvt. Ltd. <iteanzabhaykumar@titan.co.in>",
       to: email,
       subject: "Verify Your Email OTP",
-      text: `Dear User, A sign in attempt requires further verification because we did not recognize your device. To complete the sign in, enter the verification code on the unrecognized device.
- Your Verification Code - ${otp}`,
+      text: `Dear User, ${otp} is The OTP For The Aryan Group Pvt. Ltd. Website Verification, Verify your OTP and get access.`,
     };
     const result = await transporter.sendMail(sendMailOptions);
     if (result) {
       res.status(200).send({
         success: true,
-        massage: "OTP has been sent successfly",
+        massage: "OTP has been sent successflly",
         otp: otp,
       });
     }
