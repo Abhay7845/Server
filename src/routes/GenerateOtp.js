@@ -55,13 +55,26 @@ const oAuth2Client = new google.auth.OAuth2(
 );
 oAuth2Client.setCredentials({ refresh_token: refress_token });
 router.post("/send-otp/by/email", async (req, res) => {
-  const { email } = await req.body;
   const otp = Math.floor(100000 + Math.random() * 900000);
+  const { email } = await req.body;
   if (!email) {
     return res
       .status(404)
       .send({ success: false, message: "email is required" });
   }
+  function getUserName(email) {
+    const nameMatch = email.match(/^(.+)@/);
+    if (nameMatch && nameMatch.length > 1) {
+      const name = nameMatch[1];
+      const cleanName = name.replace(/[.+]/g, " ");
+      const formattedName = cleanName
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+      return formattedName;
+    }
+  }
+  const userName = getUserName(email);
   try {
     const accessToken = await oAuth2Client.getAccessToken();
     const transporter = nodemailer.createTransport({
@@ -75,17 +88,24 @@ router.post("/send-otp/by/email", async (req, res) => {
         accessToken: accessToken,
       },
     });
+    const emailHtml = `
+  <html>
+    <body>
+      <p>Dear<span style="color: blue; font-weight: bold;"> ${userName}</span>, Your One-Time Password (OTP) is: <span style="color: blue; font-weight: bold;">${otp}</span> From The Aryan Group Pvt. Ltd. for Website Verification, Verify your OTP and Get access.</p>
+    </body>
+  </html>
+`;
     const sendMailOptions = {
       from: "The Aryan Group Pvt. Ltd. <iteanzabhaykumar@titan.co.in>",
       to: email,
       subject: "Verify Your Email OTP",
-      text: `Dear User, ${otp} is The OTP For The Aryan Group Pvt. Ltd. Website Verification, Verify your OTP and get access.`,
+      html: emailHtml,
     };
     const result = await transporter.sendMail(sendMailOptions);
     if (result) {
       res.status(200).send({
         success: true,
-        massage: "OTP has been sent successflly",
+        massage: "OTP has been sent successfully",
         otp: otp,
       });
     }
