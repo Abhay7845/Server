@@ -3,7 +3,7 @@ const router = express.Router();
 const Comment = require("../model/UserComment");
 const userComment = require("../validation/UserComments");
 const { validationResult } = require("express-validator");
-const userContactsValidation = require("../validation/UserComments");
+const userContactsValidation = require("../validation/UserContact");
 const ContatctUs = require("../model/ContatctUs");
 
 // COMMENT API -5
@@ -25,7 +25,7 @@ router.post("/comment", userComment, async (req, res) => {
   }
 });
 
-// FETCH SUBSCRIPTION COMMENT API -6
+// FETCH  COMMENT API -6
 router.get("/fetch/comment", async (req, res) => {
   try {
     let comments = await Comment.find({ user: req.body.id });
@@ -41,7 +41,7 @@ router.get("/fetch/comment", async (req, res) => {
   }
 });
 
-// CONTACT WITH US
+// CONTACT WITH US API
 router.post("/contact/with/us", userContactsValidation, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
