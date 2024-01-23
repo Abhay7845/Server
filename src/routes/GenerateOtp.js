@@ -39,7 +39,9 @@ router.post("/send-otp/by/phone", async (req, res) => {
       }
       if (err) {
         console.log("error==>", err);
-        res.status(501).send({ success: false, message: "otp not sent" });
+        return res
+          .status(501)
+          .send({ success: false, message: "otp not sent" });
       }
     });
   } catch (error) {
