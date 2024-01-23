@@ -41,6 +41,25 @@ router.get("/fetch/comment", async (req, res) => {
   }
 });
 
+// DELETE COMMENT API
+router.delete("/delete/comment/:id", async (req, res) => {
+  try {
+    const comments = await Comment.findByIdAndDelete(req.params.id);
+    if (!comments) {
+      return res
+        .status(404)
+        .send({ success: false, message: "data not found" });
+    } else if (req.params.id) {
+      res.status(200).send({
+        success: true,
+        message: "comment has been deleted successfully",
+      });
+    }
+  } catch (error) {
+    return res.status(400).send({ success: false, message: "Not Deleted" });
+  }
+});
+
 // CONTACT WITH US API
 router.post("/contact/with/us", userContactsValidation, async (req, res) => {
   const errors = validationResult(req);
