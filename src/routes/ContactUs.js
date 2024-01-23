@@ -1,43 +1,43 @@
 const express = require("express");
 const router = express.Router();
-const subscription = require("../model/Subscription");
-const SubscriptionValidation = require("../validation/Subscription");
+const Comment = require("../model/UserComment");
+const userComment = require("../validation/UserComments");
 const { validationResult } = require("express-validator");
-const userContactsValidation = require("../validation/Subscription");
+const userContactsValidation = require("../validation/UserComments");
 const ContatctUs = require("../model/ContatctUs");
 
 // COMMENT API -5
-router.post("/comment", SubscriptionValidation, async (req, res) => {
+router.post("/comment", userComment, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).send({ success: false, errors: errors.array() });
   }
   try {
     const { email, comment } = await req.body;
-    const subscriber = await subscription.create({ email, comment });
+    const subscriber = await Comment.create({ email, comment });
     res.status(200).send({
       success: true,
-      message: "user Subscribed successfully",
+      message: "commented successfully",
       subscriber,
     });
   } catch (error) {
-    console.log("error==>", error);
-    res.status(400).send({ success: false, message: "Not Subscribed" });
+    return res.status(400).send({ success: false, message: "Not comment" });
   }
 });
 
 // FETCH SUBSCRIPTION COMMENT API -6
 router.get("/fetch/comment", async (req, res) => {
   try {
-    let comments = await subscription.find({ user: req.body.id });
+    let comments = await Comment.find({ user: req.body.id });
     res.status(200).send({
       success: true,
-      message: "comments fetched successfully",
+      message: "users comments fetched successfully",
       comments,
     });
   } catch (error) {
-    console.log("error==>", error);
-    res.status(400).send({ success: false, message: "subscription not found" });
+    return res
+      .status(400)
+      .send({ success: false, message: "comment not found" });
   }
 });
 
@@ -60,7 +60,6 @@ router.post("/contact/with/us", userContactsValidation, async (req, res) => {
       contactUs: contactUsers,
     });
   } catch (error) {
-    console.log("error==>", error);
     return res.status(400).send({ success: false, message: "Not Subscribed" });
   }
 });

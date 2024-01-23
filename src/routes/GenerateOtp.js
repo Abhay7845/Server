@@ -38,14 +38,13 @@ router.post("/send-otp/by/phone", async (req, res) => {
         });
       }
       if (err) {
-        console.log("error==>", err);
         return res
           .status(501)
           .send({ success: false, message: "otp not sent" });
       }
     });
   } catch (error) {
-    console.log("error=>", error);
+    return res.status(404).send({ success: false, message: "internal error" });
   }
 });
 
@@ -112,7 +111,7 @@ router.post("/send-otp/by/email", async (req, res) => {
       });
     }
   } catch (error) {
-    console.log("error==>", error);
+    return res.status(400).send({ success: false, message: "not sent" });
   }
 });
 

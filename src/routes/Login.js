@@ -40,7 +40,6 @@ router.post("/login", loginValidation, async (req, res) => {
       loginTime,
     });
   } catch (error) {
-    console.log("error==>", error);
     return res.status(500).send("user doesn't login");
   }
 });

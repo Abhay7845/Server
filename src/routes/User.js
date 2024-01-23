@@ -47,8 +47,9 @@ router.post("/register", registerValidation, async (req, res) => {
       loginTime,
     });
   } catch (error) {
-    console.log("error==>", error);
-    res.status(500).send({ success: false, message: "user not register" });
+    return res
+      .status(500)
+      .send({ success: false, message: "user not register" });
   }
 });
 
@@ -63,8 +64,7 @@ router.get("/fetchUser", fetchUser, async (req, res) => {
       data: user ? user : undefined,
     });
   } catch (error) {
-    console.log("error==>", error);
-    res.status(500).send("user not found");
+    return res.status(500).send("user not found");
   }
 });
 
@@ -103,8 +103,7 @@ router.post("/addUser", fetchUser, addUserValidation, async (req, res) => {
       .status(200)
       .send({ success: true, message: "user added successfully", addUser });
   } catch (error) {
-    console.log("error==>", error);
-    res.status(400).send({ success: false, message: "user not added" });
+    return res.status(400).send({ success: false, message: "user not added" });
   }
 });
 
@@ -122,8 +121,7 @@ router.get("/fetchAddUser", fetchUser, async (req, res) => {
       res.status(404).json({ success: false, error: "added users not found" });
     }
   } catch (error) {
-    console.log("error==>", error);
-    res.status(400).send({ success: false, message: error });
+    return res.status(400).send({ success: false, message: error });
   }
 });
 
@@ -143,8 +141,7 @@ router.get("/fetch/AddUser/:id", async (req, res) => {
       });
     }
   } catch (error) {
-    console.log("error==>", error);
-    res.status(400).send({ success: false, message: "user not found" });
+    return res.status(400).send({ success: false, message: "user not found" });
   }
 });
 
@@ -163,7 +160,7 @@ router.delete("/delete/user/:id", async (req, res) => {
       });
     }
   } catch (error) {
-    console.log("error==>", error);
+    return res.status(400).send({ success: false, message: "Not Deleted" });
   }
 });
 
@@ -215,10 +212,10 @@ router.put("/forgot/password", async (req, res) => {
     );
     res.json({
       success: true,
-      message: "password Reset successfully",
+      message: "password reset successfully",
     });
   } catch (error) {
-    console.log("error==>", error);
+    return res.status(400).send({ success: false, message: "not reset" });
   }
 });
 

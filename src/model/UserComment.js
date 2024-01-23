@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const Subscription = new mongoose.Schema({
+const Comment = new mongoose.Schema({
   email: {
     type: String,
     require: true,
@@ -15,4 +15,4 @@ const Subscription = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("comment", Subscription);
+module.exports = mongoose.model("comment", Comment);
