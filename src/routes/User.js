@@ -7,7 +7,6 @@ const addUserValidation = require("../validation/addUser");
 const { validationResult } = require("express-validator");
 var jwt = require("jsonwebtoken");
 var fetchUser = require("../middleware/FetchUser");
-
 const JWT_SECRET = "AryanIsGoodBoy";
 
 const loginTime = Date();
@@ -51,9 +50,9 @@ router.get("/fetchUser", fetchUser, async (req, res) => {
   try {
     const userId = await req.body.user._id;
     const user = await User.findById(userId).select("-password");
-    res.status(200).send({ success: user ? true : false, message: user ? "user fetched successfully" : "Invalid token", data: user ? user : undefined });
+    res.status(200).send({ code: 1000, message: "user fetched successfully", data: user });
   } catch (error) {
-    return res.status(500).send({ message: "Internal server error" });
+    return res.status(500).send({ code: 500, message: "Internal server error" });
   }
 });
 
@@ -78,9 +77,13 @@ router.post("/addUser", fetchUser, addUserValidation, async (req, res) => {
       postalCode,
       address,
     });
-    res.status(200).send({ success: true, message: "user added successfully", addUser });
+    if (userId) {
+      res.status(200).send({ code: 1000, message: "User inserted successfully", addUser });
+    } else {
+      res.status(200).send({ code: 1001, message: "User not inserted", addUser });
+    }
   } catch (error) {
-    return res.status(500).send({ success: false, message: "Internal server error" });
+    return res.status(500).send({ code: 500, message: "Internal server error" });
   }
 });
 
@@ -89,12 +92,12 @@ router.get("/fetchAddUser", fetchUser, async (req, res) => {
   try {
     let addUserData = await AddUser.find({ user: req.body.user });
     if (addUserData.length > 0) {
-      res.status(200).send({ success: true, message: "user fetched successfully", addUserData });
+      res.status(200).send({ code: 1000, message: "User fetched successfully", addUserData });
     } else {
-      res.status(200).json({ success: false, error: "Data not available" });
+      res.status(200).json({ code: 1001, error: "Data not available" });
     }
   } catch (error) {
-    return res.status(500).send({ success: false, message: "Internal server error" });
+    return res.status(500).send({ code: 500, message: "Internal server error" });
   }
 });
 
@@ -122,7 +125,7 @@ router.delete("/delete/user/:id", async (req, res) => {
       res.status(200).send({ success: true, message: "Data has been deleted successfully" });
     }
   } catch (error) {
-    return res.status(500).send({ success: false, message: "Internal Server error" });
+    return res.status(500).send({ success: false, message: "Internal server error" });
   }
 });
 
@@ -131,7 +134,7 @@ router.put("/update/user/:id", async (req, res) => {
   try {
     const updateUser = await AddUser.findById(req.params.id);
     if (!updateUser) {
-      return res.status(200).send({ success: false, message: "user Not found" });
+      return res.status(200).send({ code: 1001, message: "User not found" });
     } else {
       await AddUser.findByIdAndUpdate(updateUser._id, {
         name: req.body.name,
@@ -144,10 +147,10 @@ router.put("/update/user/:id", async (req, res) => {
         postalCode: req.body.postalCode,
         address: req.body.address,
       });
-      res.status(200).send({ success: true, message: "data has been updated successfully" });
+      res.status(200).send({ code: 1001, message: "Data has been updated successfully" });
     }
   } catch (error) {
-    return res.status(500).send({ success: false, message: "Internal server error" });
+    return res.status(500).send({ code: 500, message: "Internal server error" });
   }
 });
 
@@ -157,7 +160,7 @@ router.put("/forgot/password", async (req, res) => {
   try {
     let user = await User.findOne({ email });
     if (!user) {
-      return res.status(200).json({ success: false, error: "Invalid Email" });
+      return res.status(200).json({ code: 1001, error: "User not found" });
     }
     const salt = await bcrypt.genSalt(10);
     const SecPassword = bcrypt.hashSync(conPassword, salt);
@@ -165,9 +168,9 @@ router.put("/forgot/password", async (req, res) => {
       { email },
       { password: SecPassword }
     );
-    res.status(200).json({ success: true, message: "password reset successfully" });
+    res.status(200).json({ code: 1000, message: "Password reset successfully" });
   } catch (error) {
-    return res.status(500).send({ success: false, message: "Internal server error" });
+    return res.status(500).send({ code: 500, message: "Internal server error" });
   }
 });
 
