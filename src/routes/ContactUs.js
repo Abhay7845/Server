@@ -15,13 +15,9 @@ router.post("/comment", userComment, async (req, res) => {
   try {
     const { email, comment } = await req.body;
     const subscriber = await Comment.create({ email, comment });
-    res.status(200).send({
-      success: true,
-      message: "commented successfully",
-      subscriber,
-    });
+    res.status(200).send({ success: true, message: "commented successfully", subscriber });
   } catch (error) {
-    return res.status(400).send({ success: false, message: "Not comment" });
+    return res.status(500).send({ success: false, message: "Internal Server Error" });
   }
 });
 
@@ -35,9 +31,7 @@ router.get("/fetch/comment", async (req, res) => {
       comments,
     });
   } catch (error) {
-    return res
-      .status(400)
-      .send({ success: false, message: "comment not found" });
+    return res.status(500).send({ success: false, message: "Internal Server Error" });
   }
 });
 
@@ -46,17 +40,12 @@ router.delete("/delete/comment/:id", async (req, res) => {
   try {
     const comments = await Comment.findByIdAndDelete(req.params.id);
     if (!comments) {
-      return res
-        .status(404)
-        .send({ success: false, message: "data not found" });
+      return res.status(200).send({ success: false, message: "data not found" });
     } else if (req.params.id) {
-      res.status(200).send({
-        success: true,
-        message: "comment has been deleted successfully",
-      });
+      res.status(200).send({ success: true, message: "comment has been deleted successfully" });
     }
   } catch (error) {
-    return res.status(400).send({ success: false, message: "Not Deleted" });
+    return res.status(500).send({ success: false, message: "Internal Server Error" });
   }
 });
 
@@ -73,13 +62,9 @@ router.post("/contact/with/us", userContactsValidation, async (req, res) => {
       phone: phone,
       message: message,
     });
-    res.status(200).send({
-      success: true,
-      message: "sent successfully",
-      contactUs: contactUsers,
-    });
+    res.status(200).send({ success: true, message: "sent successfully", contactUs: contactUsers });
   } catch (error) {
-    return res.status(400).send({ success: false, message: "Not Subscribed" });
+    return res.status(500).send({ success: false, message: "Internal Server Error" });
   }
 });
 
