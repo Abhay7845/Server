@@ -106,12 +106,12 @@ router.get("/fetch/AddUser/:id", async (req, res) => {
   try {
     const AddedUser = await AddUser.findById(req.params.id);
     if (!AddedUser) {
-      return res.status(200).send({ success: false, message: "Data not found" });
+      return res.status(200).send({ code: 1001, message: "Data not found" });
     } else {
-      res.status(200).send({ success: true, message: "Data fetched successfully", AddedUser });
+      res.status(200).send({ code: 1000, message: "Data fetched successfully", AddedUser });
     }
   } catch (error) {
-    return res.status(500).send({ success: false, message: "Internal server error" });
+    return res.status(500).send({ code: 500, message: "Internal server error" });
   }
 });
 
@@ -120,17 +120,21 @@ router.delete("/delete/user/:id", async (req, res) => {
   try {
     const userData = await AddUser.findByIdAndDelete(req.params.id);
     if (!userData) {
-      return res.status(200).send({ success: false, message: "Data not found" });
+      return res.status(200).send({ code: 1001, message: "Data not found" });
     } else if (req.params.id) {
-      res.status(200).send({ success: true, message: "Data has been deleted successfully" });
+      res.status(200).send({ code: 1000, message: "Data has been deleted successfully" });
     }
   } catch (error) {
-    return res.status(500).send({ success: false, message: "Internal server error" });
+    return res.status(500).send({ code: 500, message: "Internal server error" });
   }
 });
 
 // UPDATE ADD USERS API -8
-router.put("/update/user/:id", async (req, res) => {
+router.put("/update/user/:id", fetchUser, addUserValidation, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ success: false, errors: errors.array() });
+  }
   try {
     const updateUser = await AddUser.findById(req.params.id);
     if (!updateUser) {
@@ -147,7 +151,7 @@ router.put("/update/user/:id", async (req, res) => {
         postalCode: req.body.postalCode,
         address: req.body.address,
       });
-      res.status(200).send({ code: 1001, message: "Data has been updated successfully" });
+      res.status(200).send({ code: 1000, message: "Data has been updated successfully" });
     }
   } catch (error) {
     return res.status(500).send({ code: 500, message: "Internal server error" });
