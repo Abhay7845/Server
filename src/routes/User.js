@@ -14,14 +14,14 @@ const loginTime = Date();
 // REGISTER ROUTER :-1
 router.post("/register", async (req, res) => {
   const { name, email, phone, password } = await req.body;
-  if (!name) return res.status(200).send({ status: false, message: "name is required" });
-  if (!email) return res.status(200).send({ status: false, message: "email is required" });
-  if (!phone) return res.status(200).send({ status: false, message: "phone is required" });
-  if (!password) return res.status(200).send({ status: false, message: "password is required" });
+  if (!name) return res.status(200).send({ success: false, message: "name is required" });
+  if (!email) return res.status(200).send({ success: false, message: "email is required" });
+  if (!phone) return res.status(200).send({ success: false, message: "phone is required" });
+  if (!password) return res.status(200).send({ success: false, message: "password is required" });
   try {
     let user = await User.findOne({ email: email });
     if (user) {
-      return res.status(200).json({ success: false, massage: "sorry! Email is already registered" });
+      return res.status(200).json({ code: 1001, massage: "sorry! Email is already registered" });
     }
     const salt = await bcrypt.genSalt(10);
     const SecPassword = bcrypt.hashSync(password, salt);
@@ -35,14 +35,14 @@ router.post("/register", async (req, res) => {
     const data = { user: user };
     const token = jwt.sign(data, JWT_SECRET);
     res.status(200).send({
-      success: true,
+      code: 1000,
       message: "user registered successfully",
       user,
       token,
       loginTime,
     });
   } catch (error) {
-    return res.status(500).send({ success: false, message: "Interanl server error" });
+    return res.status(500).send({ code: 5000, message: "Interanl server error" });
   }
 });
 

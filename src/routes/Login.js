@@ -14,7 +14,7 @@ router.post("/login", async (req, res) => {
   try {
     let user = await User.findOne({ email });
     if (!user) {
-      return res.status(200).send({ success: false, error: "Sorry!  please register with us" });
+      return res.status(200).send({ success: false, error: "Sorry! please register with us" });
     }
     const comparePassword = await bcrypt.compare(password, user.password);
     if (!comparePassword) {
@@ -23,7 +23,7 @@ router.post("/login", async (req, res) => {
     const data = { user: user };
     const token = jwt.sign(data, JWT_SECRET);
     res.status(200).send({
-      success: true,
+      success: 1000,
       message: "login successfully",
       user,
       token,
