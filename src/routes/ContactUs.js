@@ -15,7 +15,7 @@ router.post("/comment", userComment, async (req, res) => {
   try {
     const { email, comment } = await req.body;
     const subscriber = await Comment.create({ email, comment });
-    res.status(200).send({ code: 1000, message: "commented successfully", subscriber });
+    res.status(200).send({ code: 1000, message: "Commente sent successfully", subscriber });
   } catch (error) {
     return res.status(500).send({ code: 500, message: "Internal Server Error" });
   }
