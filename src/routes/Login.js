@@ -9,28 +9,28 @@ const loginTime = Date();
 // LOGIN USE API
 router.post("/login", async (req, res) => {
   const { email, password } = await req.body;
-  if (!email) return res.status(200).send({ status: false, message: "email is required" });
-  if (!password) return res.status(200).send({ status: false, message: "password is required" });
+  if (!email) return res.status(200).send({ success: false, message: "email is required" });
+  if (!password) return res.status(200).send({ success: false, message: "password is required" });
   try {
     let user = await User.findOne({ email });
     if (!user) {
-      return res.status(200).send({ success: false, error: "Sorry! please register with us" });
+      return res.status(200).send({ code: 1001, error: "Sorry! please register with us" });
     }
     const comparePassword = await bcrypt.compare(password, user.password);
     if (!comparePassword) {
-      return res.status(200).send({ success: false, error: "Sorry! password dose not matched" });
+      return res.status(200).send({ code: 1002, error: "Sorry! password dose not matched" });
     }
     const data = { user: user };
     const token = jwt.sign(data, JWT_SECRET);
     res.status(200).send({
-      success: 1000,
+      code: 1000,
       message: "login successfully",
       user,
       token,
       loginTime,
     });
   } catch (error) {
-    return res.status(500).send({ status: false, message: "Internal Server Error" });
+    return res.status(500).send({ code: 500, message: "Internal Server Error" });
   }
 });
 

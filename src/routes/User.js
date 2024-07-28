@@ -42,7 +42,7 @@ router.post("/register", async (req, res) => {
       loginTime,
     });
   } catch (error) {
-    return res.status(500).send({ code: 5000, message: "Interanl server error" });
+    return res.status(500).send({ code: 500, message: "Interanl server error" });
   }
 });
 
