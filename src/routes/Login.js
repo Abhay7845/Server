@@ -2,19 +2,15 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const User = require("../model/Users");
-const loginValidation = require("../validation/Login");
-const { validationResult } = require("express-validator");
 var jwt = require("jsonwebtoken");
 const JWT_SECRET = "AryanIsGoodBoy";
 
 const loginTime = Date();
 // LOGIN USE API
-router.post("/login", loginValidation, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).send({ errors: errors.array() });
-  }
+router.post("/login", async (req, res) => {
   const { email, password } = await req.body;
+  if (!email) return res.status(200).send({ status: false, message: "email is required" });
+  if (!password) return res.status(200).send({ status: false, message: "password is required" });
   try {
     let user = await User.findOne({ email });
     if (!user) {
@@ -24,9 +20,7 @@ router.post("/login", loginValidation, async (req, res) => {
     if (!comparePassword) {
       return res.status(200).send({ success: false, error: "Sorry! password dose not matched" });
     }
-    const data = {
-      user: user,
-    };
+    const data = { user: user };
     const token = jwt.sign(data, JWT_SECRET);
     res.status(200).send({
       success: true,
@@ -49,12 +43,7 @@ router.get("/login/success/:email", async (req, res) => {
     const data = { user: user };
     const token = jwt.sign(data, JWT_SECRET);
     if (user) {
-      res.status(200).send({
-        success: true,
-        massage: "login successfully",
-        user,
-        token: token,
-      });
+      res.status(200).send({ success: true, massage: "login successfully", user, token: token });
     } else if (!user) {
       return res.status(200).send({ success: false, massage: "user not authorized" });
     }
