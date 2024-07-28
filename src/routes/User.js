@@ -32,9 +32,7 @@ router.post("/register", async (req, res) => {
       phone: phone,
       password: SecPassword,
     });
-    const data = {
-      user: user,
-    };
+    const data = { user: user };
     const token = jwt.sign(data, JWT_SECRET);
     res.status(200).send({
       success: true,
@@ -67,17 +65,7 @@ router.post("/addUser", fetchUser, addUserValidation, async (req, res) => {
   }
   try {
     const userId = await req.body.user._id;
-    const {
-      name,
-      occupation,
-      email,
-      phone,
-      country,
-      state,
-      city,
-      postalCode,
-      address,
-    } = await req.body;
+    const { name, occupation, email, phone, country, state, city, postalCode, address } = await req.body;
     const addUser = await AddUser.create({
       user: userId,
       name,
@@ -103,7 +91,7 @@ router.get("/fetchAddUser", fetchUser, async (req, res) => {
     if (addUserData.length > 0) {
       res.status(200).send({ success: true, message: "user fetched successfully", addUserData });
     } else {
-      res.status(200).json({ success: false, error: "added users not found" });
+      res.status(200).json({ success: false, error: "Data not available" });
     }
   } catch (error) {
     return res.status(500).send({ success: false, message: "Internal server error" });
@@ -115,9 +103,9 @@ router.get("/fetch/AddUser/:id", async (req, res) => {
   try {
     const AddedUser = await AddUser.findById(req.params.id);
     if (!AddedUser) {
-      return res.status(200).send({ success: false, message: "added user Not found" });
+      return res.status(200).send({ success: false, message: "Data not found" });
     } else {
-      res.status(200).send({ success: true, message: "added user fetched successfully", AddedUser });
+      res.status(200).send({ success: true, message: "Data fetched successfully", AddedUser });
     }
   } catch (error) {
     return res.status(500).send({ success: false, message: "Internal server error" });
@@ -129,9 +117,9 @@ router.delete("/delete/user/:id", async (req, res) => {
   try {
     const userData = await AddUser.findByIdAndDelete(req.params.id);
     if (!userData) {
-      return res.status(200).send({ success: false, message: "data not found" });
+      return res.status(200).send({ success: false, message: "Data not found" });
     } else if (req.params.id) {
-      res.status(200).send({ success: true, message: "data has been deleted successfully" });
+      res.status(200).send({ success: true, message: "Data has been deleted successfully" });
     }
   } catch (error) {
     return res.status(500).send({ success: false, message: "Internal Server error" });

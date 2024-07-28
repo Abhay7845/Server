@@ -25,13 +25,13 @@ router.post("/comment", userComment, async (req, res) => {
 router.get("/fetch/comment", async (req, res) => {
   try {
     let comments = await Comment.find({ user: req.body.id });
-    res.status(200).send({
-      success: true,
-      message: "users comments fetched successfully",
-      comments,
-    });
+    if (comments.length > 0) {
+      res.status(200).send({ success: true, message: "users comments fetched successfully", comments });
+    } else {
+      res.status(200).send({ success: false, message: "Comments not available", comments });
+    }
   } catch (error) {
-    return res.status(500).send({ success: false, message: "Internal Server Error" });
+    return res.status(500).send({ success: false, message: "Internal server error" });
   }
 });
 
@@ -40,12 +40,12 @@ router.delete("/delete/comment/:id", async (req, res) => {
   try {
     const comments = await Comment.findByIdAndDelete(req.params.id);
     if (!comments) {
-      return res.status(200).send({ success: false, message: "data not found" });
+      return res.status(200).send({ success: false, message: "Comments not found" });
     } else if (req.params.id) {
-      res.status(200).send({ success: true, message: "comment has been deleted successfully" });
+      res.status(200).send({ success: true, message: "Comment has been deleted successfully" });
     }
   } catch (error) {
-    return res.status(500).send({ success: false, message: "Internal Server Error" });
+    return res.status(500).send({ success: false, message: "Internal server error" });
   }
 });
 
@@ -62,9 +62,9 @@ router.post("/contact/with/us", userContactsValidation, async (req, res) => {
       phone: phone,
       message: message,
     });
-    res.status(200).send({ success: true, message: "sent successfully", contactUs: contactUsers });
+    res.status(200).send({ success: true, message: "Contact sent successfully", contactUs: contactUsers });
   } catch (error) {
-    return res.status(500).send({ success: false, message: "Internal Server Error" });
+    return res.status(500).send({ success: false, message: "Internal server error" });
   }
 });
 
