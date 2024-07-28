@@ -35,7 +35,6 @@ router.post("/login", async (req, res) => {
 });
 
 // LOGIN WITH GOOGLE API
-
 router.get("/login/success/:email", async (req, res) => {
   try {
     const email = await req.params.email;
@@ -43,12 +42,12 @@ router.get("/login/success/:email", async (req, res) => {
     const data = { user: user };
     const token = jwt.sign(data, JWT_SECRET);
     if (user) {
-      res.status(200).send({ success: true, massage: "login successfully", user, token: token });
+      res.status(200).send({ code: 1000, massage: "login successfully", user, token: token });
     } else if (!user) {
-      return res.status(200).send({ success: false, massage: "user not authorized" });
+      return res.status(200).send({ code: 1001, error: "Sorry! email is unauthorized" });
     }
   } catch (error) {
-    return res.status(500).send({ success: false, massage: "Internal Servr Error" });
+    return res.status(500).send({ code: 500, massage: "Internal Servr Error" });
   }
 });
 
