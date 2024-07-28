@@ -2,17 +2,13 @@ const express = require("express");
 const router = express.Router();
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
-const messagebird = require("messagebird").initClient(
-  "zMVhu4ChdHgdNdPMLOXDK6vYw"
-);
+const messagebird = require("messagebird").initClient("zMVhu4ChdHgdNdPMLOXDK6vYw");
 
 // EMAIL REQUIRED DATA
-const client_id =
-  "517975281730-voasvrddq9f7bpd9pk025kqc7nfbdeq2.apps.googleusercontent.com";
+const client_id = "517975281730-voasvrddq9f7bpd9pk025kqc7nfbdeq2.apps.googleusercontent.com";
 const client_secret = "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";
 const redirect_url = "https://developers.google.com/oauthplayground";
-const refress_token =
-  "1//04eE8bdlMcnXBCgYIARAAGAQSNwF-L9Irp81PJHibaan2RxZolxd3JmenOM7SQiOxrCYKCJ3nhQlQ41YZo0xbzhzMATctv6CxqJA";
+const refress_token = "1//04eE8bdlMcnXBCgYIARAAGAQSNwF-L9Irp81PJHibaan2RxZolxd3JmenOM7SQiOxrCYKCJ3nhQlQ41YZo0xbzhzMATctv6CxqJA";
 
 // SEND OTP BY PHONE NUMBER
 router.post("/send-otp/by/phone", async (req, res) => {
@@ -20,9 +16,7 @@ router.post("/send-otp/by/phone", async (req, res) => {
   const { phoneNumber } = await req.body;
   const newPhoneNo = `+91${phoneNumber}`;
   if (!phoneNumber) {
-    return res
-      .status(404)
-      .send({ success: false, message: "phone number is required" });
+    return res.status(404).send({ success: false, message: "phone number is required" });
   }
   try {
     const params = {
@@ -33,14 +27,12 @@ router.post("/send-otp/by/phone", async (req, res) => {
       if (success) {
         res.status(200).send({
           success: true,
-          message: "OTP has been sent successfly",
+          message: "OTP has been sent successflly",
           opt: otp,
         });
       }
       if (err) {
-        return res
-          .status(501)
-          .send({ success: false, message: "otp not sent" });
+        return res.status(501).send({ success: false, message: "otp not sent" });
       }
     });
   } catch (error) {
@@ -59,19 +51,14 @@ router.post("/send-otp/by/email", async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000);
   const { email } = await req.body;
   if (!email) {
-    return res
-      .status(404)
-      .send({ success: false, message: "email is required" });
+    return res.status(404).send({ success: false, message: "email is required" });
   }
   function getUserName(email) {
     const nameMatch = email.match(/^(.+)@/);
     if (nameMatch && nameMatch.length > 1) {
       const name = nameMatch[1];
       const cleanName = name.replace(/[.+]/g, " ");
-      const formattedName = cleanName
-        .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
+      const formattedName = cleanName.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
       return formattedName;
     }
   }

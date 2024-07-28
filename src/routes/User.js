@@ -47,9 +47,7 @@ router.post("/register", registerValidation, async (req, res) => {
       loginTime,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ success: false, message: "user not register" });
+    return res.status(200).send({ success: false, message: "user not register" });
   }
 });
 
@@ -58,11 +56,7 @@ router.get("/fetchUser", fetchUser, async (req, res) => {
   try {
     const userId = await req.body.user._id;
     const user = await User.findById(userId).select("-password");
-    res.status(200).send({
-      success: true,
-      message: user ? "user fetched successfully" : "invalid token",
-      data: user ? user : undefined,
-    });
+    res.status(200).send({ success: true, message: user ? "user fetched successfully" : "invalid token", data: user ? user : undefined });
   } catch (error) {
     return res.status(500).send("user not found");
   }
@@ -99,9 +93,7 @@ router.post("/addUser", fetchUser, addUserValidation, async (req, res) => {
       postalCode,
       address,
     });
-    res
-      .status(200)
-      .send({ success: true, message: "user added successfully", addUser });
+    res.status(200).send({ success: true, message: "user added successfully", addUser });
   } catch (error) {
     return res.status(400).send({ success: false, message: "user not added" });
   }
@@ -112,11 +104,7 @@ router.get("/fetchAddUser", fetchUser, async (req, res) => {
   try {
     let addUserData = await AddUser.find({ user: req.body.user });
     if (addUserData.length > 0) {
-      res.status(200).send({
-        success: true,
-        message: "user fetched successfully",
-        addUserData,
-      });
+      res.status(200).send({ success: true, message: "user fetched successfully", addUserData });
     } else {
       res.status(404).json({ success: false, error: "added users not found" });
     }
@@ -130,15 +118,9 @@ router.get("/fetch/AddUser/:id", async (req, res) => {
   try {
     const AddedUser = await AddUser.findById(req.params.id);
     if (!AddedUser) {
-      return res
-        .status(400)
-        .send({ success: false, message: "added user Not found" });
+      return res.status(400).send({ success: false, message: "added user Not found" });
     } else {
-      res.status(200).send({
-        success: true,
-        message: "added user fetched successfully",
-        AddedUser,
-      });
+      res.status(200).send({ success: true, message: "added user fetched successfully", AddedUser });
     }
   } catch (error) {
     return res.status(400).send({ success: false, message: "user not found" });
@@ -150,14 +132,9 @@ router.delete("/delete/user/:id", async (req, res) => {
   try {
     const userData = await AddUser.findByIdAndDelete(req.params.id);
     if (!userData) {
-      return res
-        .status(404)
-        .send({ success: false, message: "data not found" });
+      return res.status(404).send({ success: false, message: "data not found" });
     } else if (req.params.id) {
-      res.status(200).send({
-        success: true,
-        message: "data has been deleted successfully",
-      });
+      res.status(200).send({ success: true, message: "data has been deleted successfully" });
     }
   } catch (error) {
     return res.status(400).send({ success: false, message: "Not Deleted" });
@@ -169,9 +146,7 @@ router.put("/update/user/:id", async (req, res) => {
   try {
     const updateUser = await AddUser.findById(req.params.id);
     if (!updateUser) {
-      return res
-        .status(400)
-        .send({ success: false, message: "user Not found" });
+      return res.status(400).send({ success: false, message: "user Not found" });
     } else {
       await AddUser.findByIdAndUpdate(updateUser._id, {
         name: req.body.name,
@@ -184,13 +159,10 @@ router.put("/update/user/:id", async (req, res) => {
         postalCode: req.body.postalCode,
         address: req.body.address,
       });
-      res.status(200).send({
-        success: true,
-        message: "data has been updated successfully",
-      });
+      res.status(200).send({ success: true, message: "data has been updated successfully" });
     }
   } catch (error) {
-    res.status(500).send({ success: false, message: error });
+    return res.status(500).send({ success: false, message: error });
   }
 });
 
@@ -206,14 +178,9 @@ router.put("/forgot/password", async (req, res) => {
     const SecPassword = bcrypt.hashSync(conPassword, salt);
     await User.updateOne(
       { email },
-      {
-        password: SecPassword,
-      }
+      { password: SecPassword }
     );
-    res.json({
-      success: true,
-      message: "password reset successfully",
-    });
+    res.json({ success: true, message: "password reset successfully" });
   } catch (error) {
     return res.status(400).send({ success: false, message: "not reset" });
   }
