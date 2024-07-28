@@ -18,7 +18,7 @@ router.post("/login", loginValidation, async (req, res) => {
   try {
     let user = await User.findOne({ email });
     if (!user) {
-      return res.status(200).json({ success: false, error: "Sorry!  please register with us" });
+      return res.status(200).send({ success: false, error: "Sorry!  please register with us" });
     }
     const comparePassword = bcrypt.compare(password, user.password);
     if (!comparePassword) {
@@ -28,7 +28,7 @@ router.post("/login", loginValidation, async (req, res) => {
       user: user,
     };
     const token = jwt.sign(data, JWT_SECRET);
-    res.send(200).json({
+    res.status(200).send({
       success: true,
       message: "login successfully",
       user,
@@ -36,7 +36,7 @@ router.post("/login", loginValidation, async (req, res) => {
       loginTime,
     });
   } catch (error) {
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).send({ status: false, message: "Internal Server Error" });
   }
 });
 
