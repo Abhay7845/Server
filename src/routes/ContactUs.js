@@ -62,7 +62,7 @@ router.post("/contact/with/us", userContactsValidation, async (req, res) => {
       phone: phone,
       message: message,
     });
-    res.status(200).send({ code: 1000, message: "Contact Detials sent successfully", contactUs: contactUsers });
+    res.status(200).send({ code: 1000, message: "Contact details sent successfully", contactUs: contactUsers });
   } catch (error) {
     return res.status(500).send({ code: 500, message: "Internal server error" });
   }
