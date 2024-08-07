@@ -56,6 +56,24 @@ router.get("/fetchUser", fetchUser, async (req, res) => {
   }
 });
 
+
+// REGISTER BY EMAIL
+router.get("/register/by/:email", async (req, res) => {
+  try {
+    const email = await req.params.email;
+    const user = await User.findOne({ email });
+    const data = { user: user };
+    console.log("data==>", data);
+    const regex = /^([a-zA-Z]+)\d*@/;
+    const userName = email.match(regex);
+    console.log("userName==>", userName, email);
+    if (user) return res.status(200).json({ code: 1001, massage: "sorry! Email is already registered" });
+  } catch (error) {
+    return res.status(500).send({ code: 500, massage: "Internal Servr Error" });
+  }
+});
+
+
 //ADD USER ROUTER - 4
 router.post("/addUser", fetchUser, addUserValidation, async (req, res) => {
   const errors = validationResult(req);

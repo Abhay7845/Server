@@ -35,7 +35,7 @@ router.post("/login", async (req, res) => {
 });
 
 // LOGIN WITH GOOGLE API
-router.get("/login/success/:email", async (req, res) => {
+router.get("/login/by/:email", async (req, res) => {
   try {
     const email = await req.params.email;
     const user = await User.findOne({ email });
