@@ -59,15 +59,30 @@ router.get("/fetchUser", fetchUser, async (req, res) => {
 
 // REGISTER BY EMAIL
 router.get("/register/by/:email", async (req, res) => {
+  const email = await req.params.email;
+  const splitName = await email.split("@");
+  const userName = splitName.join('').match(/[a-zA-Z]+/g) || [];
   try {
-    const email = await req.params.email;
-    const user = await User.findOne({ email });
-    const data = { user: user };
-    console.log("data==>", data);
-    const regex = /^([a-zA-Z]+)\d*@/;
-    const userName = email.match(regex);
-    console.log("userName==>", userName, email);
-    if (user) return res.status(200).json({ code: 1001, massage: "sorry! Email is already registered" });
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(200).json({ code: 1001, massage: "sorry! Email is already registered" })
+    } else {
+      user = await User.create({
+        name: userName[0],
+        email: email,
+        phone: "",
+        password: "",
+      });
+      const data = { user: user };
+      const token = jwt.sign(data, JWT_SECRET);
+      res.status(200).send({
+        code: 1000,
+        message: "user registered successfully",
+        user,
+        token,
+        loginTime,
+      });
+    }
   } catch (error) {
     return res.status(500).send({ code: 500, massage: "Internal Servr Error" });
   }
