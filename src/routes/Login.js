@@ -6,6 +6,7 @@ var jwt = require("jsonwebtoken");
 const JWT_SECRET = "AryanIsGoodBoy";
 
 const loginTime = Date();
+
 // LOGIN USE API
 router.post("/login", async (req, res) => {
   const { email, password } = await req.body;
