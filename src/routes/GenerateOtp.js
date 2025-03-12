@@ -2,13 +2,17 @@ const express = require("express");
 const router = express.Router();
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
-const messagebird = require("messagebird").initClient("zMVhu4ChdHgdNdPMLOXDK6vYw");
+const messagebird = require("messagebird").initClient(
+  "zMVhu4ChdHgdNdPMLOXDK6vYw"
+);
 
 // EMAIL REQUIRED DATA
-const client_id = "517975281730-voasvrddq9f7bpd9pk025kqc7nfbdeq2.apps.googleusercontent.com";
+const client_id =
+  "517975281730-voasvrddq9f7bpd9pk025kqc7nfbdeq2.apps.googleusercontent.com";
 const client_secret = "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";
 const redirect_url = "https://developers.google.com/oauthplayground";
-const refress_token = "1//04eE8bdlMcnXBCgYIARAAGAQSNwF-L9Irp81PJHibaan2RxZolxd3JmenOM7SQiOxrCYKCJ3nhQlQ41YZo0xbzhzMATctv6CxqJA";
+const refress_token =
+  "1//04eE8bdlMcnXBCgYIARAAGAQSNwF-L9Irp81PJHibaan2RxZolxd3JmenOM7SQiOxrCYKCJ3nhQlQ41YZo0xbzhzMATctv6CxqJA";
 
 // SEND OTP BY PHONE NUMBER
 router.post("/send-otp/by/phone", async (req, res) => {
@@ -16,7 +20,9 @@ router.post("/send-otp/by/phone", async (req, res) => {
   const { phoneNumber } = await req.body;
   const newPhoneNo = `+91${phoneNumber}`;
   if (!phoneNumber) {
-    return res.status(200).send({ success: false, message: "Phone number is required" });
+    return res
+      .status(200)
+      .send({ success: false, message: "Phone number is required" });
   }
   try {
     const params = {
@@ -25,14 +31,22 @@ router.post("/send-otp/by/phone", async (req, res) => {
     };
     messagebird.verify.create(newPhoneNo, params, (err, success) => {
       if (success) {
-        res.status(200).send({ code: 1000, message: "OTP has been sent successfully", opt: otp, });
+        res
+          .status(200)
+          .send({
+            code: 1000,
+            message: "OTP has been sent successfully",
+            opt: otp,
+          });
       }
       if (err) {
         return res.status(200).send({ code: 1001, message: "OTP not sent" });
       }
     });
   } catch (error) {
-    return res.status(500).send({ code: 500, message: "Internal server error" });
+    return res
+      .status(500)
+      .send({ code: 500, message: "Internal server error" });
   }
 });
 
@@ -47,14 +61,19 @@ router.post("/send-otp/by/email", async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000);
   const { email } = await req.body;
   if (!email) {
-    return res.status(200).send({ success: false, message: "Email is required" });
+    return res
+      .status(200)
+      .send({ success: false, message: "Email is required" });
   }
   function getUserName(email) {
     const nameMatch = email.match(/^(.+)@/);
     if (nameMatch && nameMatch.length > 1) {
       const name = nameMatch[1];
       const cleanName = name.replace(/[.+]/g, " ");
-      const formattedName = cleanName.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+      const formattedName = cleanName
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
       return formattedName;
     }
   }
@@ -87,7 +106,13 @@ router.post("/send-otp/by/email", async (req, res) => {
     };
     const result = await transporter.sendMail(sendMailOptions);
     if (result) {
-      res.status(200).send({ code: 1000, massage: "OTP has been sent successfully", otp: otp });
+      res
+        .status(200)
+        .send({
+          code: 1000,
+          massage: "OTP has been sent successfully",
+          otp: otp,
+        });
     }
   } catch (error) {
     return res.status(500).send({ code: 500, message: "Inernal server error" });
