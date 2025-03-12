@@ -66,13 +66,9 @@ router.get("/user/profile", fetchUser, async (req, res) => {
   try {
     const userId = await req.body.user._id;
     const user = await User.findById(userId).select("-password");
-    res
-      .status(200)
-      .send({ code: 1000, message: "user fetched successfully", data: user });
+    res.status(200).send({ code: 1000, message: "user fetched successfully", data: user });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ code: 500, message: "Internal server error" });
+    return res.status(500).send({ code: 500, message: "Internal server error" });
   }
 });
 
