@@ -14,4 +14,4 @@ app.use("/api/user", require("./src/routes/Login"));
 app.use("/api/user", require("./src/routes/GenerateOtp"));
 app.use("/api/user", require("./src/routes/ContactUs"));
 
-app.listen(PORT, () => console.log(`Server is Running on PORT ${PORT}`));
+app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
