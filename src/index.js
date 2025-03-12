@@ -1,9 +1,8 @@
-const express = require("express");
-const connectTOdb = require("./dataBase/Connection");
-const cors = require("cors");
+const DatabaseConnection = require("./dataBase/Connection");
 require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
 const app = express();
-connectTOdb(process.env.DB_URL);
 app.use(express.json());
 app.use(cors());
 const PORT = process.env.PORT || 7000;
@@ -15,3 +14,5 @@ app.use("/api/user", require("./routes/GenerateOtp"));
 app.use("/api/user", require("./routes/ContactUs"));
 
 app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
+DatabaseConnection(process.env.DB_URL);
+
