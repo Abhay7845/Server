@@ -30,13 +30,11 @@ router.get("/fetch/comment", async (req, res) => {
   try {
     let comments = await Comment.find({ user: req.body.id });
     if (comments.length > 0) {
-      res
-        .status(200)
-        .send({
-          code: 1000,
-          message: "Users comments fetched successfully",
-          comments,
-        });
+      res.status(200).send({
+        code: 1000,
+        message: "Users comments fetched successfully",
+        comments,
+      });
     } else {
       res
         .status(200)
@@ -82,13 +80,11 @@ router.post("/contact/with/us", userContactsValidation, async (req, res) => {
       phone: phone,
       message: message,
     });
-    res
-      .status(200)
-      .send({
-        code: 1000,
-        message: "Contact details sent successfully",
-        contactUs: contactUsers,
-      });
+    res.status(200).send({
+      code: 1000,
+      message: "Contact details sent successfully",
+      contactUs: contactUsers,
+    });
   } catch (error) {
     return res
       .status(500)

@@ -31,13 +31,11 @@ router.post("/send-otp/by/phone", async (req, res) => {
     };
     messagebird.verify.create(newPhoneNo, params, (err, success) => {
       if (success) {
-        res
-          .status(200)
-          .send({
-            code: 1000,
-            message: "OTP has been sent successfully",
-            opt: otp,
-          });
+        res.status(200).send({
+          code: 1000,
+          message: "OTP has been sent successfully",
+          opt: otp,
+        });
       }
       if (err) {
         return res.status(200).send({ code: 1001, message: "OTP not sent" });
@@ -106,13 +104,11 @@ router.post("/send-otp/by/email", async (req, res) => {
     };
     const result = await transporter.sendMail(sendMailOptions);
     if (result) {
-      res
-        .status(200)
-        .send({
-          code: 1000,
-          massage: "OTP has been sent successfully",
-          otp: otp,
-        });
+      res.status(200).send({
+        code: 1000,
+        massage: "OTP has been sent successfully",
+        otp: otp,
+      });
     }
   } catch (error) {
     return res.status(500).send({ code: 500, message: "Inernal server error" });

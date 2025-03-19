@@ -55,14 +55,12 @@ router.get("/login/by/:email", async (req, res) => {
     const data = { user: user };
     const token = jwt.sign(data, JWT_SECRET);
     if (user) {
-      res
-        .status(200)
-        .send({
-          code: 1000,
-          massage: "login successfully",
-          user,
-          token: token,
-        });
+      res.status(200).send({
+        code: 1000,
+        massage: "login successfully",
+        user,
+        token: token,
+      });
     } else if (!user) {
       return res
         .status(200)

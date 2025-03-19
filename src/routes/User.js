@@ -5,8 +5,8 @@ const User = require("../model/Users");
 const AddUser = require("../model/AddUser");
 const addUserValidation = require("../validation/addUser");
 const { validationResult } = require("express-validator");
-var jwt = require("jsonwebtoken");
-var fetchUser = require("../middleware/FetchUser");
+const jwt = require("jsonwebtoken");
+const fetchUser = require("../middleware/FetchUser");
 const JWT_SECRET = "AryanIsGoodBoy";
 
 const loginTime = Date();
@@ -62,6 +62,7 @@ router.post("/register", async (req, res) => {
 });
 
 // FETCH USER DETAILS ROUTES -3
+
 router.get("/user/profile", fetchUser, async (req, res) => {
   try {
     const userId = await req.body.user._id;
