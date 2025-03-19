@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const multer = require("multer");
 const User = require("../model/Users");
 const AddUser = require("../model/AddUser");
 const addUserValidation = require("../validation/addUser");
@@ -11,7 +12,11 @@ const JWT_SECRET = "AryanIsGoodBoy";
 
 const loginTime = Date();
 // REGISTER ROUTER :-1
-router.post("/register", async (req, res) => {
+
+const storage = multer.memoryStorage();
+const uploadImg = multer({ storage });
+
+router.post("/register", uploadImg.single("profile"), async (req, res) => {
   const { name, email, phone, password } = await req.body;
   if (!name)
     return res
@@ -38,11 +43,14 @@ router.post("/register", async (req, res) => {
     }
     const salt = await bcrypt.genSalt(10);
     const SecPassword = bcrypt.hashSync(password, salt);
+    const imgUrl = (req.file && req.file.buffer.toString("base64")) || null;
+
     // create users
     user = await User.create({
       name: name,
       email: email,
       phone: phone,
+      profile: imgUrl,
       password: SecPassword,
     });
     const data = { user: user };

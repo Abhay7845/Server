@@ -14,6 +14,10 @@ const users = new mongoose.Schema({
     type: Number,
     require: true,
   },
+  profile: {
+    type: String,
+    require: false,
+  },
   password: {
     type: String,
     require: true,
