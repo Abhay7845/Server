@@ -6,7 +6,7 @@ const cors = require("cors");
 const app = express();
 app.use(express.json());
 app.use(cors());
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT || 8000;
 
 //DATA BASE CONNECTION CODD
 const DatabaseConnection = (connectionURI) => {
